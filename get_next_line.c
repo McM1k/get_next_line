@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/01/12 18:44:56 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/01/19 20:33:10 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,23 @@
 
 int			get_next_line(int const fd, char ** line)
 {
-	char		*buf;
-	int			rd;
+	static char		*buf;
+	int				rd;
+	int				i;
 
-	buf = (char *)malloc(rd);
+	if (buf[0] == '\0')
+	{
+		rd = read(fd, buf, BUF_SIZE);
+		buf = (char *)malloc(rd);
+	}
+	i = 0;
+	while (buf[i] != \n)
+	{
+		if (buf[i] == '\0')
+		{
+			rd = read(fd, buf, BUF_SIZE);
+			buf = (char *)malloc(rd);
+		}
+		i++;
+	}
 }
