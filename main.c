@@ -11,6 +11,7 @@ int main(int ac, char **av)
 		ft_putendl("--- TEST AVEC FICHIER ---");
 		while (get_next_line(fd, str))
 			ft_putendl(str);
+		ft_putendl(str);
 		ft_putendl("-------------------------\n");
 		ft_putendl("--- TEST MAUVAIS FICH ---");
 		av[1] = NULL;
