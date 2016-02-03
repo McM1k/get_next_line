@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/01 23:12:05 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 19:28:32 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,54 @@ static void	*ft_addalloc(char **line, char *buf, int len)
 
 int			get_next_line(int const fd, char ** line)
 {
-	static char		*str[MAX_FD];		
-	char			*buf[BUFF_SIZE];
+	static char		*str = NULL;
+	char			buf[BUFF_SIZE];
 	int				rd;
-	int				len;
+	char			*tmp;
 
-	while ((rd = read(fd, buf, BUF_SIZE)) > 0 )
+	if (!str) // when you need to refill str
 	{
-		if (!(ft_strchr(buf, '\n')))
-			len = rd;
-		else
-			len = ft_strchr(buf, '\n') - buf;
-		if (str)
-			str = ft_addalloc(&str, buf, len);
-		else
+		rd = read(fd, buf, BUF_SIZE);
+		if (rd) // dont create an empty line if eof
 			str = ft_strsub(buf, 0, rd);
-		if (len < rd || rd == 0) //if eof or \n
-		{
-			
-
-
-		}
 	}
-	if (rd < 1)
-		return (rd);
-	return (1);
+	if (read(fd, buf, BUF_SIZE) && str)
+	{	
+		tmp = str;
+		str = ft_strjoin(tmp, buf);
+		free(&tmp);
+	}
+	if (ft_strchr(str, '\n')) // if we get a newLine
+	{
+		
+		return (1);
+	}
+
+
+
+
+
+
+
+
+//	while ((rd = read(fd, buf, BUF_SIZE)) > 0 )
+//	{
+//		if (!(ft_strchr(buf, '\n')))
+//			len = rd;
+//		else
+//			len = ft_strchr(buf, '\n') - buf;
+//		if (str)
+//			str = ft_addalloc(&str, buf, len);
+//		else
+//			str = ft_strsub(buf, 0, rd);
+//		if (len < rd || rd == 0) //if eof or \n
+//		{
+//			
+//
+//
+//		}
+//	}
+//	if (rd < 1)
+//		return (rd);
+//	return (1);
 }
