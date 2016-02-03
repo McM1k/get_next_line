@@ -6,23 +6,23 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/03 19:28:32 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 21:14:34 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void	*ft_addalloc(char **line, char *buf, int len)
-{
-	char	*new_line;
-
-	new_line = ft_strnew(ft_strlen(*line) + len - 1);
-	strcpy(new_line, *line);
-	strncat(new_line, buf, len - 1);
-	free(*line);
-	line = &new_line;
-	return (line);
-}
+//static void	*ft_addalloc(char **line, char *buf, int len)
+//{
+//	char	*new_line;
+//
+//	new_line = ft_strnew(ft_strlen(*line) + len - 1);
+//	strcpy(new_line, *line);
+//	strncat(new_line, buf, len - 1);
+//	free(*line);
+//	line = &new_line;
+//	return (line);
+//}
 
 int			get_next_line(int const fd, char ** line)
 {
@@ -37,7 +37,7 @@ int			get_next_line(int const fd, char ** line)
 		if (rd) // dont create an empty line if eof
 			str = ft_strsub(buf, 0, rd);
 	}
-	if (read(fd, buf, BUF_SIZE) && str)
+	while (read(fd, buf, BUF_SIZE) && !(ft_strchr(str, '\n')))
 	{	
 		tmp = str;
 		str = ft_strjoin(tmp, buf);
@@ -48,6 +48,8 @@ int			get_next_line(int const fd, char ** line)
 		
 		return (1);
 	}
+	if (!(str) && !(read(fd, buf, BUF_SIZE))) // if str=null & rd=0 , it's over
+		return (0);
 
 
 
