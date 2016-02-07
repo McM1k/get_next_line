@@ -45,7 +45,10 @@ int			get_next_line(int const fd, char ** line)
 	}
 	if (ft_strchr(str, '\n')) // if we get a newLine
 	{
-		
+		line = ft_strsub(str, 0, ft_strchr(str, '\n') - str);
+		tmp = str;
+		str = ft_strsub(tmp, ft_strchr(str, '\n') - str, ft_strlen(tmp));
+		free(&tmp);
 		return (1);
 	}
 	if (!(str) && !(read(fd, buf, BUF_SIZE))) // if str=null & rd=0 , it's over
