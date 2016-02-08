@@ -11,17 +11,18 @@ int main(int ac, char **av)
 		ft_putendl("--- TEST AVEC FICHIER ---");
 		while (get_next_line(fd, &str))
 		{
+			ft_putstr("line : ");
 			ft_putendl(str);
-			ft_memdel(str);
+			ft_memdel((void **)&str);
 		}
 		ft_putendl(str);
-		ft_memdel(str);
+		ft_memdel((void **)&str);
 		ft_putendl("-------------------------\n");
 		ft_putendl("--- TEST MAUVAIS FICH ---");
 		av[1] = "./grossesFessesQuiPuent";
 		ft_putstr("gnl retourne : ");
 		ft_putnbr(get_next_line(fd, &str));
-		ft_memdel(str);
+		ft_memdel((void **)&str);
 		ft_putendl("\n-------------------------\n");
 		close(fd);
 		ft_putendl("--- TEST AVEC CLAVIER ---");
@@ -30,7 +31,7 @@ int main(int ac, char **av)
 		get_next_line(fd, &str);
 		ft_putstr("La chaine retournee est : ");
 		ft_putendl(str);
-		ft_memdel(str);
+		ft_memdel((void **)&str);
 		ft_putendl("-------------------------\n");
 	}
 	return (0);
