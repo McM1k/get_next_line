@@ -6,13 +6,13 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/08 22:07:25 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/08 22:17:40 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	reallocate(char **line, char *str)
+static int	allocLess(char **line, char *str)
 {
 	int		size;
 	char	*tmp;
@@ -25,12 +25,21 @@ static int	reallocate(char **line, char *str)
 	return (1);
 }
 
+static char	allocMore(char *str, char *buf)
+{
+	char	*tmp;
+
+	tmp = str;
+	str = ft_strjoin(tmp, buf);
+	ft_strdel(&tmp);
+	return (str);
+}
+
 int			get_next_line(int const fd, char ** line)
 {
 	static char		*str = NULL;
 	char			buf[BUFF_SIZE];
 	int				rd;
-	char			*tmp;
 
 	if (!str)
 	{
@@ -39,13 +48,9 @@ int			get_next_line(int const fd, char ** line)
 			str = ft_strsub(buf, 0, rd);
 	}
 	while (read(fd, buf, BUFF_SIZE) > 0 && !(ft_strchr(str, '\n')))
-	{
-		tmp = str;
-		str = ft_strjoin(tmp, buf);
-		ft_strdel(&tmp);
-	}
+		str = allocMore(str, buf);
 	if (ft_strchr(str, '\n'))
-		return (reallocate(line, str));
+		return (allocLess(line, str));
 	if (!(read(fd, buf, BUFF_SIZE)))
 	{
 		if (str)
