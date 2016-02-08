@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/08 22:17:40 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/08 22:32:49 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	allocLess(char **line, char *str)
 	return (1);
 }
 
-static char	allocMore(char *str, char *buf)
+static char	*allocMore(char *str, char *buf)
 {
 	char	*tmp;
 
