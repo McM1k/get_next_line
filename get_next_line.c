@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/08 15:09:30 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/08 17:46:05 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,24 @@ int			get_next_line(int const fd, char ** line)
 	{
 		tmp = str;
 		str = ft_strjoin(tmp, buf);
-		ft_memdel((void **)&tmp);
+		ft_strdel(&tmp);
 	}
 	if (ft_strchr(str, '\n'))
 	{
 		*line = ft_strsub(str, 0, ft_strchr(str, '\n') - str);
 		tmp = str;
 		str = ft_strsub(tmp, ft_strchr(str, '\n') - str + 1, ft_strlen(tmp) - (ft_strchr(str, '\n') - str + 1));
-		ft_memdel((void **)&tmp);
+		ft_strdel(&tmp);
 		return (1);
 	}
-	if (!(str) && !(read(fd, buf, BUFF_SIZE)))
+	if (!(read(fd, buf, BUFF_SIZE)))
+	{
+		if (str)
+		{
+			*line = ft_strdup(str);
+			ft_strdel(&str);
+		}
 		return (0);
+	}
 	return (-1);
 }
