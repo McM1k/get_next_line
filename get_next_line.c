@@ -6,11 +6,24 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/08 17:46:05 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/08 22:07:25 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+static int	reallocate(char **line, char *str)
+{
+	int		size;
+	char	*tmp;
+	
+	size = ft_strchr(str, '\n') - str;
+	*line = ft_strsub(str, 0, size);
+	tmp = str;
+	str = ft_strsub(tmp, size + 1, ft_strlen(tmp) - (size + 1));
+	ft_strdel(&tmp);
+	return (1);
+}
 
 int			get_next_line(int const fd, char ** line)
 {
@@ -32,13 +45,7 @@ int			get_next_line(int const fd, char ** line)
 		ft_strdel(&tmp);
 	}
 	if (ft_strchr(str, '\n'))
-	{
-		*line = ft_strsub(str, 0, ft_strchr(str, '\n') - str);
-		tmp = str;
-		str = ft_strsub(tmp, ft_strchr(str, '\n') - str + 1, ft_strlen(tmp) - (ft_strchr(str, '\n') - str + 1));
-		ft_strdel(&tmp);
-		return (1);
-	}
+		return (reallocate(line, str));
 	if (!(read(fd, buf, BUFF_SIZE)))
 	{
 		if (str)
