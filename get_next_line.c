@@ -6,13 +6,13 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/23 15:33:43 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/23 16:16:26 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	allocLess(char **line, char **str)
+static int	alloc_less(char **line, char **str)
 {
 	int		size;
 	char	*tmp;
@@ -25,7 +25,7 @@ static int	allocLess(char **line, char **str)
 	return (1);
 }
 
-static char	*allocMore(char **str, char *buf)
+static char	*alloc_more(char **str, char *buf)
 {
 	char	*tmp;
 
@@ -37,19 +37,21 @@ static char	*allocMore(char **str, char *buf)
 
 static int	reader(int rd, char **str, int fd)
 {
-	char 	*buf;
+	char	*buf;
 
 	if (!(buf = ft_strnew(BUFF_SIZE)))
 		return (-1);
 	if (!*str)
 	{
-		rd = read(fd, buf, BUFF_SIZE);
+		if ((rd = read(fd, buf, BUFF_SIZE)) == -1)
+			return (-1);
 		buf[rd] = '\0';
 		*str = ft_strsub(buf, 0, BUFF_SIZE);
 	}
 	while (!ft_strchr(*str, '\n') && rd > 0)
 	{
-		rd = read(fd, buf, BUFF_SIZE);
+		if ((rd = read(fd, buf, BUFF_SIZE)) == -1)
+			return (-1);
 		if (rd > 0)
 		{
 			buf[rd] = '\0';
@@ -57,10 +59,12 @@ static int	reader(int rd, char **str, int fd)
 		}
 	}
 	ft_strdel(&buf);
-	return (rd);
+	if (ft_strlen(*str) > 0)
+		return (1);
+	return (0);
 }
 
-int			get_next_line(int const fd, char ** line)
+int			get_next_line(int const fd, char **line)
 {
 	static char		*str = NULL;
 	int				rd;
@@ -73,10 +77,11 @@ int			get_next_line(int const fd, char ** line)
 			return (allocLess(line, &str));
 		else
 		{
-			*line = ft_strdup(str);	
+			*line = ft_strdup(str);
+			*str = '\0';
 			return (1);
 		}
-	}	
+	}
 	else
 		return (0);
 }

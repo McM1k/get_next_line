@@ -6,12 +6,12 @@
 /*   By: gboudrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/30 16:37:46 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/08 11:33:59 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/02/23 16:17:00 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE
-# define GET_NEXT_LINE
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 # include "libft/libft.h"
 # include <unistd.h>
 # define BUFF_SIZE 32
