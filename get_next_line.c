@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/03/02 23:01:45 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/03/04 18:44:08 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,29 @@ static t_fd	is_node_existing(int fd, t_fd *begin)
 	return (node);
 }
 
-static int	alloc_less(char **line, char **str)
+static int	alloc_less(t_fd *ptr, t_fd *begin, int rd)
 {
 	int		size;
-	char	*tmp;
+	t_fd	*tmp;
+	char	*str_tmp;
 
-	size = ft_strchr(*str, '\n') - *str;
-	*line = ft_strsub(*str, 0, size);
-	tmp = *str;
-	*str = ft_strsub(tmp, size + 1, ft_strlen(tmp) - (size + 1));
-	ft_strdel(&tmp);
+	if (rd > 0)
+	{
+		size = ft_strchr(ptr->str, '\n') - ptr->str;
+		str_tmp = ft_strsub(ptr->str, size + 1, ft_strlen(ptr->str) - (size + 1));
+		ft_strdel(&ptr->str);
+		ptr->str = str_tmp;
+	}
+	if (rd == 0 && ptr->fd != 0 && ptr->str[0] == '\0')
+	{
+		tmp = begin;
+		while (tmp->fd != (ptr->fd - 1))
+			tmp = tmp->next;
+		tmp->next = ptr->next;
+		ft_strdel(&ptr->str);
+		ft_memdel(&ptr);
+		return (0);
+	}
 	return (1);
 }
 
@@ -80,12 +93,12 @@ static int	reader(int rd, t_fd node, int fd)
 
 int			get_next_line(int const fd, char **line)
 {
-	static t_fd		*start = NULL;
+	static t_fd		*begin = NULL;
 	t_fd			*ptr;
 	int				rd;
 
-	if (!start)
-		start = new_node(0);
+	if (!begin)
+		begin = new_node(0);
 	rd = 1;
 	if ((rd = reader(rd, ptr, fd)) == -1)
 		return (-1);
@@ -93,5 +106,10 @@ int			get_next_line(int const fd, char **line)
 		*line = ft_strsub(ptr->str, 0, ft_strlen(ptr->str));
 	else
 		*line = ft_strsub(ptr->str, 0, ft_strchr(ptr->str, '\n') - ptr->str);
-	return (0);
+	if (ptr->fd == 0 && ret == 0)
+	{
+		ft_strdel(&ptr->str);
+		ptr->str = ft_strnew(BUFF_SIZE);
+	}
+	return (!((rd == 0) && (cleaner(ptr, begin, rd) == 0)));
 }
