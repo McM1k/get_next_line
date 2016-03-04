@@ -6,7 +6,7 @@
 /*   By: gboudrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/30 16:37:46 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/02/23 16:17:00 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/03/04 16:53:18 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 # define MAX_FD 2147483647
 int		get_next_line(int const fd, char **line);
 
-typedef struct	s_fs
+typedef struct	s_fd
 {
 	int			fd;
-	char			str;
-	struct s_fs	*next;
+	char		str;
+	struct s_fd	*next;
 }				t_fd;
 
 #endif
