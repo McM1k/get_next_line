@@ -2,6 +2,7 @@
 #include <fcntl.h>
 int main(int ac, char **av)
 {
+	int kk;
 	int fd;
 	char *str = NULL;
 	
@@ -9,17 +10,15 @@ int main(int ac, char **av)
 	{
 		fd = open(av[1], O_RDONLY);
 		ft_putendl("--- TEST AVEC FICHIER ---");
-		while (get_next_line(fd, &str))
+		while ((kk = get_next_line(fd, &str)))
 		{
 			ft_putstr("line : ");
 			ft_putendl(str);
 			ft_memdel((void **)&str);
 		}
-		ft_putendl(str);
-		ft_memdel((void **)&str);
 		ft_putendl("-------------------------\n");
 		ft_putendl("--- TEST MAUVAIS FICH ---");
-		av[1] = "./grossesFessesQuiPuent";
+		av[1] = "grossesFessesQuiPuent";
 		ft_putstr("gnl retourne : ");
 		ft_putnbr(get_next_line(fd, &str));
 		ft_memdel((void **)&str);
