@@ -6,15 +6,15 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/03/04 18:44:08 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/03/04 19:31:09 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static t_fd	new_node(int fd)
+static t_fd	*new_node(int fd)
 {
-	t_fd = new;
+	t_fd	*new;
 
 	new = (t_fd *)ft_memalloc(sizeof(t_fd));
 	new->fd = fd;
@@ -23,7 +23,7 @@ static t_fd	new_node(int fd)
 	return (new);
 }
 
-static t_fd	is_node_existing(int fd, t_fd *begin)
+static t_fd	*is_node_existing(int fd, t_fd *begin)
 {
 	t_fd	*tmp;
 	t_fd	*node;
@@ -50,8 +50,8 @@ static int	alloc_less(t_fd *ptr, t_fd *begin, int rd)
 
 	if (rd > 0)
 	{
-		size = ft_strchr(ptr->str, '\n') - ptr->str;
-		str_tmp = ft_strsub(ptr->str, size + 1, ft_strlen(ptr->str) - (size + 1));
+		size = ft_strchr(ptr->str, '\n') - ptr->str + 1;
+		str_tmp = ft_strsub(ptr->str, size, ft_strlen(ptr->str) - (size));
 		ft_strdel(&ptr->str);
 		ptr->str = str_tmp;
 	}
@@ -62,13 +62,13 @@ static int	alloc_less(t_fd *ptr, t_fd *begin, int rd)
 			tmp = tmp->next;
 		tmp->next = ptr->next;
 		ft_strdel(&ptr->str);
-		ft_memdel(&ptr);
+		ft_memdel((void **)&ptr);
 		return (0);
 	}
 	return (1);
 }
 
-static int	reader(int rd, t_fd node, int fd)
+static int	reader(int rd, t_fd *node, int fd)
 {
 	char	*buf;
 	char	*tmp;
@@ -99,6 +99,7 @@ int			get_next_line(int const fd, char **line)
 
 	if (!begin)
 		begin = new_node(0);
+	ptr = is_node_existing(fd, begin);
 	rd = 1;
 	if ((rd = reader(rd, ptr, fd)) == -1)
 		return (-1);
@@ -106,10 +107,10 @@ int			get_next_line(int const fd, char **line)
 		*line = ft_strsub(ptr->str, 0, ft_strlen(ptr->str));
 	else
 		*line = ft_strsub(ptr->str, 0, ft_strchr(ptr->str, '\n') - ptr->str);
-	if (ptr->fd == 0 && ret == 0)
+	if (ptr->fd == 0 && rd == 0)
 	{
 		ft_strdel(&ptr->str);
 		ptr->str = ft_strnew(BUFF_SIZE);
 	}
-	return (!((rd == 0) && (cleaner(ptr, begin, rd) == 0)));
+	return (!((rd == 0) && (alloc_less(ptr, begin, rd) == 0)));
 }
