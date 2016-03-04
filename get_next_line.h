@@ -6,7 +6,7 @@
 /*   By: gboudrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/30 16:37:46 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/03/04 19:26:25 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/03/04 19:40:16 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # define BUFF_SIZE 32
 # define MAX_FD 2147483647
+
 int				get_next_line(int const fd, char **line);
 
 typedef struct	s_fd
