@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/03/04 19:31:09 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/03/05 18:53:01 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static int	alloc_less(t_fd *ptr, t_fd *begin, int rd)
 {
 	int		size;
 	t_fd	*tmp;
+	t_fd	*tmp2;
 	char	*str_tmp;
 
 	if (rd > 0)
@@ -55,12 +56,15 @@ static int	alloc_less(t_fd *ptr, t_fd *begin, int rd)
 		ft_strdel(&ptr->str);
 		ptr->str = str_tmp;
 	}
-	if (rd == 0 && ptr->fd != 0 && ptr->str[0] == '\0')
+	if (rd == 0 && ptr->fd != 0)
 	{
-		tmp = begin;
-		while (tmp->fd != (ptr->fd - 1))
-			tmp = tmp->next;
-		tmp->next = ptr->next;
+		tmp2 = begin;
+		while (tmp2->fd != ptr->fd)
+		{
+			tmp = tmp2;
+			tmp2 = tmp2->next;
+		}
+		tmp->next = tmp2->next;
 		ft_strdel(&ptr->str);
 		ft_memdel((void **)&ptr);
 		return (0);
@@ -112,5 +116,5 @@ int			get_next_line(int const fd, char **line)
 		ft_strdel(&ptr->str);
 		ptr->str = ft_strnew(BUFF_SIZE);
 	}
-	return (!((rd == 0) && (alloc_less(ptr, begin, rd) == 0)));
+	return (!((alloc_less(ptr, begin, rd) == 0) && (rd == 0)));
 }
