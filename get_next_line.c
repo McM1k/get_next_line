@@ -6,7 +6,7 @@
 /*   By: gboudrie <gboudrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 19:52:53 by gboudrie          #+#    #+#             */
-/*   Updated: 2016/03/05 18:53:01 by gboudrie         ###   ########.fr       */
+/*   Updated: 2016/03/11 18:04:05 by gboudrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,17 @@ static int	alloc_less(t_fd *ptr, t_fd *begin, int rd)
 		ft_strdel(&ptr->str);
 		ptr->str = str_tmp;
 	}
+	size = ft_strlen(ptr->str);
 	if (rd == 0 && ptr->fd != 0)
 	{
 		tmp2 = begin;
-		while (tmp2->fd != ptr->fd)
-		{
-			tmp = tmp2;
+		while (tmp2->fd != ptr->fd && (tmp = tmp2))
 			tmp2 = tmp2->next;
-		}
 		tmp->next = tmp2->next;
 		ft_strdel(&ptr->str);
 		ft_memdel((void **)&ptr);
-		return (0);
 	}
-	return (1);
+	return (size);
 }
 
 static int	reader(int rd, t_fd *node, int fd)
@@ -89,6 +86,7 @@ static int	reader(int rd, t_fd *node, int fd)
 			tmp = node->str;
 			node->str = ft_strjoin(tmp, buf);
 			ft_strdel(&tmp);
+			rd = 1;
 		}
 	}
 	ft_strdel(&buf);
@@ -107,14 +105,17 @@ int			get_next_line(int const fd, char **line)
 	rd = 1;
 	if ((rd = reader(rd, ptr, fd)) == -1)
 		return (-1);
-	if (!ft_strchr(ptr->str, '\n'))
+	if (rd == 0 && ft_strlen(ptr->str) > 0)
 		*line = ft_strsub(ptr->str, 0, ft_strlen(ptr->str));
-	else
+	else if (rd > 0)
 		*line = ft_strsub(ptr->str, 0, ft_strchr(ptr->str, '\n') - ptr->str);
 	if (ptr->fd == 0 && rd == 0)
 	{
+		if (ft_strlen(ptr->str) == 0)
+			return (0);
 		ft_strdel(&ptr->str);
 		ptr->str = ft_strnew(BUFF_SIZE);
+		return (1);
 	}
 	return (!((alloc_less(ptr, begin, rd) == 0) && (rd == 0)));
 }

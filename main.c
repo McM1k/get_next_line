@@ -10,8 +10,9 @@ int main(int ac, char **av)
 	{
 		fd = open(av[1], O_RDONLY);
 		ft_putendl("--- TEST AVEC FICHIER ---");
-		while ((kk = get_next_line(fd, &str)))
+		while ((kk = get_next_line(fd, &str)) > 0)
 		{
+			ft_putnbr(kk);
 			ft_putstr("line : ");
 			ft_putendl(str);
 			ft_memdel((void **)&str);
@@ -32,6 +33,16 @@ int main(int ac, char **av)
 		ft_putendl(str);
 		ft_memdel((void **)&str);
 		ft_putendl("-------------------------\n");
+	}
+	else
+	{
+		while ((kk = get_next_line(0, &str)) > 0)
+		{
+			ft_putnbr(kk);
+			ft_putstr("line : ");
+			ft_putendl(str);
+			ft_memdel((void **)&str);
+		}
 	}
 	return (0);
 }
